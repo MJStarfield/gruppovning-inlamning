@@ -15,6 +15,26 @@
     >Läs mer</PrimaryButton
   >
 
+  <DecorativeSeparator />
+
+  <FlexRow wrap="{true}" gap="4">
+    <a href="#beaches">
+      <PrimaryButton bg-color="emerald-700" text-color="white" class="font-bold"
+        >Närliggande badplatser
+      </PrimaryButton>
+    </a>
+    <a href="#activities">
+      <PrimaryButton bg-color="emerald-700" text-color="white" class="font-bold"
+        >Aktiviteter</PrimaryButton
+      >
+    </a>
+    <a href="#attractions">
+      <PrimaryButton bg-color="emerald-700" text-color="white" class="font-bold"
+        >Sevärdheter</PrimaryButton
+      >
+    </a>
+  </FlexRow>
+
   <div
     style="height: 460px; display: inline-block; overflow: hidden"
     class="mt-4 w-full"
@@ -29,7 +49,25 @@
 
   <DecorativeSeparator />
 
-  <SubHeading>Aktiviter</SubHeading>
+  <SubHeading id="beaches">Närliggande badplatser</SubHeading>
+
+  <FlexRow wrap="{true}" gap-x="2" gap-y="4" v-slot="slotProps">
+    <CardElement
+      v-for="beach in beaches"
+      v-bind:key="beach.name"
+      v-bind:caption="beach.name"
+      v-bind:src="beach.image"
+      class="w-full md:w-1/3"
+      v-bind:class="slotProps.classes"
+    >
+      <p class="p-4 text-xl lg:text-lg">{{ beach.description }}</p>
+    </CardElement>
+  </FlexRow>
+
+  <DecorativeSeparator />
+
+  <SubHeading id="activities">Aktiviter</SubHeading>
+
   <FlexRow wrap="{true}" gap-x="2" gap-y="4" v-slot="slotProps">
     <CardElement
       v-for="activity in activities"
@@ -45,7 +83,7 @@
 
   <DecorativeSeparator />
 
-  <SubHeading>Sevärdheter</SubHeading>
+  <SubHeading id="attractions">Sevärdheter</SubHeading>
 
   <FlexRow wrap="{true}" gap-x="2" gap-y="4" v-slot="slotProps">
     <CardElement
@@ -64,6 +102,7 @@
 <script>
 import attractions from "../data/attractions";
 import activities from "../data/activities";
+import beaches from "../data/beaches";
 import { sortByPropertyName, openURLInNewTab } from "../scripts/helpers";
 
 import { defineComponent } from "vue";
@@ -94,6 +133,10 @@ export default defineComponent({
 
     activities() {
       return sortByPropertyName(activities);
+    },
+
+    beaches() {
+      return sortByPropertyName(beaches);
     },
   },
 

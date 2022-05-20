@@ -54,6 +54,17 @@
           class="rounded border-2 border-gray-200"
           v-model="departureDate"
         />
+        <PrimaryButton
+          v-if="arrivalDate !== '' && departureDate !== '' && orderItem !== ''"
+          v-on:click="reservation()"
+          bg-color="emerald-900"
+          >Boka {{ orderItem.name }}, {{ orderItem.price }} / per dag
+        </PrimaryButton>
+        <PrimaryButton
+          v-else
+          bg-color="gray-500"
+          >Välj {{ (arrivalDate === "" || departureDate === "") ? "tid" : "val nedan" }}
+        </PrimaryButton>
       </FlexRow>
 
       <!-- V-FOR -->
@@ -73,9 +84,9 @@
               <p>{{ item.description }}</p>
               <PrimaryButton
                 v-if="!isLivingBooked(item.id)"
-                v-on:click="reservation(item)"
+                v-on:click="prepareOrder(item)"
                 bg-color="emerald-900"
-                >Boka för {{ item.price }} SEK / dag</PrimaryButton
+                >Välj för att boka, {{ item.price }} SEK / dag</PrimaryButton
               >
               <PrimaryButton v-else bg-color="gray-500">Bokad!</PrimaryButton>
             </FlexColumn>
@@ -98,7 +109,7 @@ import TitleHeading from "@/components/Text/TitleHeading.vue";
 import FlexRow from "@/components/Flex/FlexRow.vue";
 import FlexColumn from "@/components/Flex/FlexColumn.vue";
 
-import { sortByPropertyName } from "../scripts/helpers";
+import { sortByPropertyName, toTop } from "../scripts/helpers";
 import BackgroundColor from "@/components/Color/BackgroundColor.vue";
 
 export default defineComponent({
@@ -110,27 +121,38 @@ export default defineComponent({
       type: "",
       arrivalDate: new Date().toLocaleDateString(),
       departureDate: new Date().toLocaleDateString(),
+      /**
+     * @type {{ type: string, id: string, name: string, price: number }} orderItem
+     */
+      orderItem: "",
     };
   },
 
   emits: ["reservation"],
 
   methods: {
-    /**
-     * @param {{ type: string, id: string, name: string, price: number }} item
-     */
-    reservation(item) {
+    prepareOrder(item) {
+      this.orderItem = item;
+      toTop();
+    },
+
+    
+    reservation() {
       const obj = {
         orderType: "living",
-        type: item.type,
-        id: item.id,
-        price: item.price,
-        name: item.name,
+        type: this.orderItem.type,
+        id: this.orderItem.id,
+        price: this.orderItem.price,
+        name: this.orderItem.name,
         arrivalDate: new Date(this.arrivalDate),
         departureDate: new Date(this.departureDate),
       };
 
       store.addToOrder(obj);
+
+      this.orderItem = ''
+      this.arrivalDate = ''
+      this.departureDate = ''
     },
 
     isLivingBooked(id) {

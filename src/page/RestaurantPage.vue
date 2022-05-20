@@ -54,6 +54,7 @@
         />
       </FlexColumn>
       <PrimaryButton
+        id="book"
         bg-color="emerald-700"
         text-color="white"
         class="mt-3 font-bold"
@@ -121,6 +122,7 @@ export default defineComponent({
       dateTime: new Date().toISOString().substring(0, 16),
       menuCategory: "appetizers",
       meals: meals,
+      store: store,
     };
   },
 
@@ -131,7 +133,7 @@ export default defineComponent({
 
     totalRestaurantBookings() {
       return (
-        store.state.order.filter(
+        this.store.state.order.filter(
           (order) => order.orderType && order.orderType === "restaurant"
         ).length
       );
@@ -147,7 +149,7 @@ export default defineComponent({
       };
 
       if (this.totalRestaurantBookings < this.maxOrders) {
-        store.addToOrder(obj);
+        this.store.addToOrder(obj);
       }
     },
   },
