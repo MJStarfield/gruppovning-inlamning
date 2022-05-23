@@ -50,7 +50,7 @@
           name="restaurantBookTime"
           class="px-0.5 rounded border-2 border-gray-200"
           v-on:click="setMinDate"
-          v-model="dateTime"
+          v-model="dateTimeStr"
         />
       </FlexColumn>
       <PrimaryButton
@@ -119,7 +119,7 @@ export default defineComponent({
   data() {
     return {
       maxOrders: 12,
-      dateTime: new Date().toISOString().substring(0, 16),
+      dateTimeStr: new Date().toISOString().substring(0, 16),
       menuCategory: "appetizers",
       meals: meals,
       store: store,
@@ -144,7 +144,7 @@ export default defineComponent({
     reservation() {
       const obj = {
         orderType: "restaurant",
-        dateTime: new Date(this.dateTime),
+        dateTime: new Date(this.dateTimeStr),
         id: Date.now(),
       };
 
